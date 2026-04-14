@@ -30,7 +30,10 @@ function createCircleIcon(color: string, name: string): L.DivIcon {
         font-weight: 600;
         font-family: system-ui, sans-serif;
         color: #1a202c;
-        text-shadow: 0 1px 3px white, 0 -1px 3px white, 1px 0 3px white, -1px 0 3px white;
+        background: white;
+        border-radius: 999px;
+        padding: 1px 7px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.25);
         cursor: pointer;
         pointer-events: none;
       ">${firstName}</span>
