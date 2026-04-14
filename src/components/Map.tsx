@@ -13,19 +13,30 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-function createCircleIcon(color: string): L.DivIcon {
+function createCircleIcon(color: string, name: string): L.DivIcon {
+  const firstName = name.split(' ')[0]
   return L.divIcon({
-    html: `<div style="
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background-color: ${color};
-      border: 2px solid white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      cursor: pointer;
-    "></div>`,
+    html: `<div style="display: flex; align-items: center; gap: 5px; white-space: nowrap;">
+      <div style="
+        width: 14px; height: 14px; flex-shrink: 0;
+        border-radius: 50%;
+        background-color: ${color};
+        border: 2px solid white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        cursor: pointer;
+      "></div>
+      <span style="
+        font-size: 11px;
+        font-weight: 600;
+        font-family: system-ui, sans-serif;
+        color: #1a202c;
+        text-shadow: 0 1px 3px white, 0 -1px 3px white, 1px 0 3px white, -1px 0 3px white;
+        cursor: pointer;
+        pointer-events: none;
+      ">${firstName}</span>
+    </div>`,
     className: '',
-    iconSize: [14, 14],
+    iconSize: [0, 0],
     iconAnchor: [7, 7],
     popupAnchor: [0, -10],
   })
@@ -88,7 +99,7 @@ function MarkersLayer({ members, teams }: MarkersLayerProps) {
 
     geocoded.forEach((member) => {
       const color = getTeamColorHex(member.team)
-      const icon = createCircleIcon(color)
+      const icon = createCircleIcon(color, member.name)
       const marker = L.marker([member.lat!, member.lng!], { icon })
       marker.bindPopup(buildPopupHtml(member, color), {
         maxWidth: 260,
