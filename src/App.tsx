@@ -77,11 +77,16 @@ export default function App() {
     []
   )
 
-  // Load from backend on mount
+  // Load from backend on mount, fall back to localStorage
   useEffect(() => {
     fetchMembers()
       .then((list) => { if (list.length > 0) applyMembers(list) })
-      .catch(() => {})
+      .catch(() => {
+        const raw = localStorage.getItem('team-kaart-members')
+        if (raw) {
+          try { applyMembers(JSON.parse(raw)) } catch { /* corrupt data */ }
+        }
+      })
       .finally(() => setDbReady(true))
   }, [applyMembers])
 
@@ -121,8 +126,10 @@ export default function App() {
 
       try {
         const saved = await importMembers(geocoded)
+        localStorage.setItem('team-kaart-members', JSON.stringify(saved))
         applyMembers(saved, { cacheHits, cacheMisses })
       } catch {
+        localStorage.setItem('team-kaart-members', JSON.stringify(geocoded))
         applyMembers(geocoded, { cacheHits, cacheMisses })
       }
     },
